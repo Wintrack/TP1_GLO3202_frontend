@@ -15,9 +15,7 @@ const Register = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
       });
-      console.log(apiUrl)
-      console.log(JSON.stringify({ email, password }))
-      const data = await response.json();
+      await response.json();
     } catch (error) {
       console.error('Error:', error);
     }
