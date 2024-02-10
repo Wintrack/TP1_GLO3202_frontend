@@ -1,11 +1,11 @@
 // src/components/AuthForm.js
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 const AuthForm = ({ title, endpoint, onToggle, navigate }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,12 +17,12 @@ const AuthForm = ({ title, endpoint, onToggle, navigate }) => {
       });
 
       // Handle successful response
-      console.log('API Response:', response.data);
-      navigate('/dashboard'); // Redirect to dashboard or any other route after successful login/register
+      console.log("API Response:", response.data);
+      navigate("/dashboard"); // Redirect to dashboard or any other route after successful login/register
     } catch (error) {
       // Handle error
-      console.error('API Error:', error.message);
-      setError('Invalid credentials. Please try again.'); // Update error state
+      console.error("API Error:", error.message);
+      setError("Invalid credentials. Please try again."); // Update error state
     }
   };
 
@@ -50,9 +50,9 @@ const AuthForm = ({ title, endpoint, onToggle, navigate }) => {
         <button type="submit">{title}</button>
       </form>
       <p onClick={onToggle}>
-        {title === 'Login'
-          ? 'Don’t have an account? Register here.'
-          : 'Already have an account? Login here.'}
+        {title === "Login"
+          ? "Don’t have an account? Register here."
+          : "Already have an account? Login here."}
       </p>
     </div>
   );
