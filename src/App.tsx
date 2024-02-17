@@ -4,7 +4,7 @@ import { AuthProvider } from './AuthContext/AuthContext';
 import PrivateRoute from './AuthContext/PrivateRoute';
 import Signin from './components/auth/Signin';
 import Signup from './components/auth/Signup';
-import BookmarkForm from './components/bookmarks/BookmarkForm';
+import BookmarkComponent from './components/bookmarks/Bookmarkcomponent';
 
 
 const App: React.FC = () => {
@@ -18,7 +18,7 @@ const App: React.FC = () => {
 
         {/* Private route using PrivateRoute component */}
         <Route path="/" element={<PrivateRoute />}>
-          <Route path="/home" element={<BookmarkForm />} />
+          <Route path="/home" element={<BookmarkComponent />} />
         </Route>
       </Routes>
     </AuthProvider>

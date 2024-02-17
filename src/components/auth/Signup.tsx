@@ -1,13 +1,14 @@
 // Signup.tsx
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Corrected import
-import './Signup.css'; // Import the CSS file
+import { useNavigate } from 'react-router-dom';
+import ApiInfoBox from '../apiInfo/ApiInfo'; // Import the new component
+import './Signup.css';
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // Use useNavigate for redirection
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,26 +17,27 @@ const Signup: React.FC = () => {
         email,
         password,
       });
-      // Handle successful signup (e.g., redirect to signin page)
       console.log(response);
-      navigate("/home"); // Corrected redirection method
+      navigate("/home");
     } catch (error) {
-      // Handle error (e.g., show error message)
+      // Handle error
     }
   };
 
   const handleSignIn = () => {
-    navigate('/'); // Assuming '/signup' is the route for the sign-up page
+    navigate('/');
   };
 
   return (
-    <form className="signup-form" onSubmit={handleSubmit}>
-      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Sign Up</button>
-      {/* Add a Sign Up button */}
-      <button type="button" onClick={handleSignIn}>Got a account ? Sign In</button>
-    </form>
+    <div>
+      <ApiInfoBox />
+      <form className="signup-form" onSubmit={handleSubmit}>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button type="submit">Sign Up</button>
+        <button type="button" onClick={handleSignIn}>Got an account? Sign In</button>
+      </form>
+    </div>
   );
 };
 

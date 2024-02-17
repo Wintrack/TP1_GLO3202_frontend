@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../AuthContext/AuthContext'; // Import the AuthContext hook
+import { useAuth } from '../../AuthContext/AuthContext';
+import ApiInfoBox from '../apiInfo/ApiInfo'; // Import the new component
 import './Signin.css';
 
 const Signin: React.FC = () => {
@@ -21,7 +22,7 @@ const Signin: React.FC = () => {
       console.log(response);
       const { access_token } = response.data;
       localStorage.setItem('access_token', access_token);
-      loginUser(); // Call the login function from the AuthContext
+      loginUser();
       navigate('/home');
     } catch (error) {
       // Handle error
@@ -33,12 +34,15 @@ const Signin: React.FC = () => {
   };
 
   return (
-    <form className="signin-form" onSubmit={handleSubmit}>
-      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Sign In</button>
-      <button type="button" onClick={handleSignUp}>New here? Sign Up</button>
-    </form>
+    <div>
+      <ApiInfoBox />
+      <form className="signin-form" onSubmit={handleSubmit}>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <button type="submit">Sign In</button>
+        <button type="button" onClick={handleSignUp}>New here? Sign Up</button>
+      </form>
+    </div>
   );
 };
 
