@@ -8,6 +8,17 @@ export const useBookmarks = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  const getCookie = (name: string): string | null => {
+    const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+    for (const cookie of cookies) {
+      const [cookieName, cookieValue] = cookie.split('=');
+      if (cookieName === name) {
+        return cookieValue;
+      }
+    }
+    return null;
+  };
+
   const fetchBookmarks = async () => {
     if (!isAuthenticated) {
       // Don't fetch bookmarks if the user is not authenticated
@@ -16,7 +27,7 @@ export const useBookmarks = () => {
 
     setLoading(true);
     try {
-      const token = localStorage.getItem('access_token');
+      const token = getCookie('access_token');
       const response = await fetch('https://backend-6xa4.onrender.com/bookmark', {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -37,7 +48,7 @@ export const useBookmarks = () => {
       return;
     }
 
-    const token = localStorage.getItem('access_token');
+    const token = getCookie('access_token');
     const response = await fetch('https://backend-6xa4.onrender.com/bookmark', {
       method: 'POST',
       headers: {
@@ -60,7 +71,7 @@ export const useBookmarks = () => {
       return;
     }
 
-    const token = localStorage.getItem('access_token');
+    const token = getCookie('access_token');
     const response = await fetch(`https://backend-6xa4.onrender.com/bookmark/${id}`, {
       method: 'PUT',
       headers: {
@@ -83,7 +94,7 @@ export const useBookmarks = () => {
       return;
     }
 
-    const token = localStorage.getItem('access_token');
+    const token = getCookie('access_token');
     const response = await fetch(`https://backend-6xa4.onrender.com/bookmark/${id}`, {
       method: 'DELETE',
       headers: {

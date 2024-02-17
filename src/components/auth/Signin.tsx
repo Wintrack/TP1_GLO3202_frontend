@@ -1,4 +1,4 @@
-// Signin.tsx
+// Import necessary dependencies
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -20,8 +20,13 @@ const Signin: React.FC = () => {
         password,
       });
       console.log(response);
+      
       const { access_token } = response.data;
+
+      // Use both local storage and cookies
       localStorage.setItem('access_token', access_token);
+      document.cookie = `access_token=${access_token}; Secure; SameSite=Strict`;
+
       loginUser();
       navigate('/home');
     } catch (error) {
