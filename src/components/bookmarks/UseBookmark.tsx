@@ -1,116 +1,143 @@
-import { useState, useEffect } from 'react';
-import { Bookmark } from './Bookmark';
-import { useAuth } from '../../AuthContext/AuthContext'; // Adjust the import path accordingly
+import { useState, useEffect } from "react";
+import { Bookmark } from "./Bookmark";
+import { useAuth } from "../../AuthContext/AuthContext"; // Adjust the import path accordingly
 
 export const useBookmarks = () => {
-  const { isAuthenticated } = useAuth();
-  const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+    const { isAuthenticated } = useAuth();
+    const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
 
-  const getCookie = (name: string): string | null => {
-    const cookies = document.cookie.split(';').map(cookie => cookie.trim());
-    for (const cookie of cookies) {
-      const [cookieName, cookieValue] = cookie.split('=');
-      if (cookieName === name) {
-        return cookieValue;
-      }
-    }
-    return null;
-  };
+    const getCookie = (name: string): string | null => {
+        const cookies = document.cookie
+            .split(";")
+            .map((cookie) => cookie.trim());
+        for (const cookie of cookies) {
+            const [cookieName, cookieValue] = cookie.split("=");
+            if (cookieName === name) {
+                return cookieValue;
+            }
+        }
+        return null;
+    };
 
-  const fetchBookmarks = async () => {
-    if (!isAuthenticated) {
-      // Don't fetch bookmarks if the user is not authenticated
-      return;
-    }
+    const fetchBookmarks = async () => {
+        if (!isAuthenticated) {
+            // Don't fetch bookmarks if the user is not authenticated
+            return;
+        }
 
-    setLoading(true);
-    try {
-      const token = getCookie('access_token');
-      const response = await fetch('https://backend-6xa4.onrender.com/bookmark', {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-      const data = await response.json();
-      setBookmarks(data);
-    } catch (error: any) {
-      setError(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setLoading(true);
+        try {
+            const token = getCookie("access_token");
+            const response = await fetch(
+                "https://backend-6xa4.onrender.com/bookmark",
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+            const data = await response.json();
+            setBookmarks(data);
+        } catch (error: any) {
+            setError(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  const createBookmark = async (bookmark: Bookmark) => {
-    if (!isAuthenticated) {
-      // Don't create bookmarks if the user is not authenticated
-      return;
-    }
+    const createBookmark = async (bookmark: Bookmark) => {
+        if (!isAuthenticated) {
+            // Don't create bookmarks if the user is not authenticated
+            return;
+        }
 
-    const token = getCookie('access_token');
-    const response = await fetch('https://backend-6xa4.onrender.com/bookmark', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(bookmark),
-    });
-    if (response.ok) {
-      const newBookmark = await response.json();
-      setBookmarks([...bookmarks, newBookmark]);
-    } else {
-      throw new Error('Failed to create bookmark');
-    }
-  };
+        const token = getCookie("access_token");
+        const response = await fetch(
+            "https://backend-6xa4.onrender.com/bookmark",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(bookmark),
+            }
+        );
+        if (response.ok) {
+            const newBookmark = await response.json();
+            setBookmarks([...bookmarks, newBookmark]);
+        } else {
+            throw new Error("Failed to create bookmark");
+        }
+    };
 
-  const updateBookmark = async (id: string, bookmark: Bookmark) => {
-    if (!isAuthenticated) {
-      // Don't update bookmarks if the user is not authenticated
-      return;
-    }
+    const updateBookmark = async (id: string, bookmark: Bookmark) => {
+        if (!isAuthenticated) {
+            // Don't update bookmarks if the user is not authenticated
+            return;
+        }
 
-    const token = getCookie('access_token');
-    const response = await fetch(`https://backend-6xa4.onrender.com/bookmark/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
-      },
-      body: JSON.stringify(bookmark),
-    });
-    if (response.ok) {
-      const updatedBookmark = await response.json();
-      setBookmarks(bookmarks.map((b) => (b.id === id ? updatedBookmark : b)));
-    } else {
-      throw new Error('Failed to update bookmark');
-    }
-  };
+        // Add the ID property to the bookmark object
+        const updatedBookmark = { ...bookmark, id };
 
-  const deleteBookmark = async (id: string) => {
-    if (!isAuthenticated) {
-      // Don't delete bookmarks if the user is not authenticated
-      return;
-    }
+        const token = getCookie("access_token");
+        const response = await fetch(
+            `https://backend-6xa4.onrender.com/bookmark`,
+            {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(updatedBookmark),
+            }
+        );
 
-    const token = getCookie('access_token');
-    const response = await fetch(`https://backend-6xa4.onrender.com/bookmark/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-    });
-    if (response.ok) {
-      setBookmarks(bookmarks.filter((b) => b.id !== id));
-    } else {
-      throw new Error('Failed to delete bookmark');
-    }
-  };
+        if (response.ok) {
+            const updatedBookmark = await response.json();
+            setBookmarks(
+                bookmarks.map((b) => (b.id === id ? updatedBookmark : b))
+            );
+        } else {
+            throw new Error("Failed to update bookmark");
+        }
+    };
 
-  useEffect(() => {
-    fetchBookmarks();
-  }, [isAuthenticated]);
+    const deleteBookmark = async (id: string) => {
+        if (!isAuthenticated) {
+            // Don't delete bookmarks if the user is not authenticated
+            return;
+        }
 
-  return { bookmarks, loading, error, createBookmark, updateBookmark, deleteBookmark };
+        const token = getCookie("access_token");
+        const response = await fetch(
+            `https://backend-6xa4.onrender.com/bookmark/${id}`,
+            {
+                method: "DELETE",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        if (response.ok) {
+            setBookmarks(bookmarks.filter((b) => b.id !== id));
+        } else {
+            throw new Error("Failed to delete bookmark");
+        }
+    };
+
+    useEffect(() => {
+        fetchBookmarks();
+    }, [isAuthenticated]);
+
+    return {
+        bookmarks,
+        loading,
+        error,
+        createBookmark,
+        updateBookmark,
+        deleteBookmark,
+    };
 };
